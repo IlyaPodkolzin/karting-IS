@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Database migrations backup
+alembic/versions/*.pyc
+alembic/__pycache__/
+
+# Logs
+logs/
+*.log
+
+# Local development
+*.db
+*.sqlite
+*.sqlite3
+
+# Secret files
+.secrets/
+config/secrets.yml
+
+# Byte-compiled files
+*.pyc
