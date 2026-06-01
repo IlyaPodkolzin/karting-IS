@@ -32,10 +32,6 @@ def list_sessions(
     now = _moscow_now()
     today = now.date()
 
-    # Auto-delete sessions from yesterday and earlier (synchronous, lightweight)
-    yesterday = today - timedelta(days=1)
-    repo.delete_before(yesterday)
-
     sessions = repo.get_all(kartodrome_id=kartodrome_id, date_filter=date)
     result = []
     for s in sessions:
