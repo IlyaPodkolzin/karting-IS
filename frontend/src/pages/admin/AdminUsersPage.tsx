@@ -36,7 +36,7 @@ export function AdminUsersPage() {
           <Card key={u.id}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <Avatar name={u.name} size={40} />
+                <Avatar name={u.name} avatarUrl={u.avatar_url} size={40} />
                 <div>
                   <div style={{ fontWeight: 600, fontSize: 14, color: '#222' }}>{u.name}</div>
                   <div style={{ fontSize: 12, color: '#888' }}>{u.email}</div>

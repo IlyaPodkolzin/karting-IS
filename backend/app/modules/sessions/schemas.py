@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
-from datetime import date, time, datetime
+from datetime import date, time
+
 
 class SessionOut(BaseModel):
     id: int
@@ -13,7 +14,11 @@ class SessionOut(BaseModel):
     max_participants: int
     price: float
     available_slots: Optional[int] = None
+    is_bookable: Optional[bool] = None    # start_time in the future (MSK)
+    is_active: Optional[bool] = None     # currently running
+    is_expired: Optional[bool] = None    # already finished
     model_config = {"from_attributes": True}
+
 
 class SessionCreate(BaseModel):
     kartodrome_id: int

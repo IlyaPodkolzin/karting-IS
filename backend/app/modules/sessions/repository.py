@@ -1,7 +1,8 @@
 from typing import List, Optional
-from datetime import date
+from datetime import date, timedelta
 from sqlalchemy.orm import Session as DBSession
 from app.modules.sessions.models import Session
+
 
 class SessionRepository:
     def __init__(self, db: DBSession):
@@ -35,3 +36,13 @@ class SessionRepository:
     def delete(self, session: Session):
         self.db.delete(session)
         self.db.commit()
+
+    def delete_before(self, cutoff_date: date) -> int:
+        """Delete all sessions on or before cutoff_date. Returns deleted count."""
+        deleted = (
+            self.db.query(Session)
+            .filter(Session.date <= cutoff_date)
+            .delete(synchronize_session=False)
+        )
+        self.db.commit()
+        return deleted

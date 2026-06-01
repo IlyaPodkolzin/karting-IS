@@ -16,7 +16,7 @@ class Booking(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     session_id = Column(Integer, ForeignKey("sessions.id"), nullable=False, index=True)
     kart_id = Column(Integer, ForeignKey("karts.id"), nullable=True)
-    status = Column(Enum(BookingStatus), nullable=False, default=BookingStatus.CONFIRMED)
+    status = Column(Enum(BookingStatus, values_callable=lambda x: [e.value for e in x]), nullable=False, default=BookingStatus.CONFIRMED)
     total_price = Column(Float, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)

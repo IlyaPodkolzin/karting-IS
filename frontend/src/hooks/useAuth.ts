@@ -7,6 +7,8 @@ export interface AuthContextValue {
   login: (email: string, password: string) => Promise<User>;
   register: (name: string, email: string, password: string) => Promise<User>;
   logout: () => void;
+  /** Update the stored user (e.g. after avatar upload or profile save) */
+  updateUser: (updated: User) => void;
 }
 
 function getStoredUser(): User | null {
@@ -19,21 +21,24 @@ function getStoredUser(): User | null {
 export function useAuthState(): AuthContextValue {
   const [user, setUser] = useState<User | null>(getStoredUser);
 
+  const _persist = useCallback((u: User) => {
+    localStorage.setItem('user', JSON.stringify(u));
+    setUser(u);
+  }, []);
+
   const login = useCallback(async (email: string, password: string): Promise<User> => {
     const data = await authApi.login(email, password);
     localStorage.setItem('access_token', data.access_token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-    setUser(data.user);
+    _persist(data.user);
     return data.user;
-  }, []);
+  }, [_persist]);
 
   const register = useCallback(async (name: string, email: string, password: string): Promise<User> => {
     const data = await authApi.register(name, email, password);
     localStorage.setItem('access_token', data.access_token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-    setUser(data.user);
+    _persist(data.user);
     return data.user;
-  }, []);
+  }, [_persist]);
 
   const logout = useCallback(() => {
     localStorage.removeItem('access_token');
@@ -41,7 +46,15 @@ export function useAuthState(): AuthContextValue {
     setUser(null);
   }, []);
 
-  return { user, login, register, logout };
+  /**
+   * Call this after any mutation (avatar upload, name change).
+   * Writes to localStorage AND re-renders all consumers of AuthContext.
+   */
+  const updateUser = useCallback((updated: User) => {
+    _persist(updated);
+  }, [_persist]);
+
+  return { user, login, register, logout, updateUser };
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

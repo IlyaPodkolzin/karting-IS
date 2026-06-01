@@ -3,6 +3,7 @@ export interface User {
   name: string;
   email: string;
   role: 'client' | 'admin';
+  avatar_url?: string | null;
   created_at: string;
 }
 
@@ -24,6 +25,7 @@ export interface Kartodrome {
   email: string | null;
   working_hours: Record<string, string> | null;
   created_at: string;
+  distance?: string | null;  // computed on frontend via Yandex Maps
 }
 
 export interface Session {
@@ -37,6 +39,9 @@ export interface Session {
   max_participants: number;
   price: number;
   available_slots?: number;
+  is_bookable?: boolean;   // server flag: start_time is still in the future (MSK)
+  is_active?: boolean;     // session currently running
+  is_expired?: boolean;    // session finished
 }
 
 export interface Booking {
@@ -76,6 +81,7 @@ export interface Kart {
   status: 'available' | 'booked' | 'maintenance' | 'retired';
   engine_type: string | null;
   last_maintenance: string | null;
+  image_url: string | null;
   kartodrome_id: number;
 }
 

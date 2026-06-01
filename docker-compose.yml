@@ -1,41 +1,48 @@
+version: "3.9"
+
+# ── Usage ─────────────────────────────────────────────────────────────────────
+# 1. cp backend/.env.example backend/.env   && edit backend/.env
+# 2. cp frontend/.env.example frontend/.env && edit frontend/.env
+# 3. docker-compose up --build
+# ─────────────────────────────────────────────────────────────────────────────
+
 services:
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-kartbook}
-      POSTGRES_USER: ${POSTGRES_USER:-kartbook_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kartbook_pass}
+      POSTGRES_DB: kartbook
+      POSTGRES_USER: kartbook_user
+      POSTGRES_PASSWORD: kartbook_pass
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kartbook_user} -d ${POSTGRES_DB:-kartbook}"]
+      test: ["CMD-SHELL", "pg_isready -U kartbook_user -d kartbook"]
       interval: 5s
       timeout: 5s
       retries: 5
-    networks:
-      - karting_network
 
   backend:
     build: ./backend
+    restart: unless-stopped
     ports:
       - "8000:8000"
+    env_file:
+      - ./backend/.env          # ← all secrets come from here, never hardcoded
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql://kartbook_user:kartbook_pass@db:5432/kartbook}
-      SECRET_KEY: ${SECRET_KEY:-supersecretkey_change_in_production_32chars}
-      ALGORITHM: ${ALGORITHM:-HS256}
-      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
-      CORS_ORIGINS: ${CORS_ORIGINS:-'["http://localhost:5173","http://localhost:80"]'}
-      ENVIRONMENT: ${ENVIRONMENT:-development}
-      DEBUG: ${DEBUG:-true}
+      # Override DATABASE_URL to use Docker service name instead of localhost
+      DATABASE_URL: postgresql://kartbook_user:kartbook_pass@db:5432/kartbook
     depends_on:
       db:
         condition: service_healthy
     volumes:
-      - ./backend:/app
-    networks:
-      - karting_network
+      - ./backend/app:/app/app
+      - ./backend/alembic:/app/alembic
+      - ./backend/alembic.ini:/app/alembic.ini
+      - ./backend/scripts:/app/scripts
+      - uploads_data:/app/uploads
     command: >
       sh -c "alembic upgrade head &&
              python scripts/seed.py &&
@@ -43,19 +50,16 @@ services:
 
   frontend:
     build: ./frontend
+    restart: unless-stopped
     ports:
       - "5173:5173"
-    environment:
-      VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
-      VITE_API_V1_PREFIX: ${VITE_API_V1_PREFIX:-/api/v1}
+    env_file:
+      - ./frontend/.env         # ← VITE_API_URL and VITE_YANDEX_MAPS_API_KEY
+    volumes:
+      - ./frontend/src:/app/src
     depends_on:
       - backend
-    networks:
-      - karting_network
 
 volumes:
   postgres_data:
-
-networks:
-  karting_network:
-    driver: bridge
+  uploads_data:

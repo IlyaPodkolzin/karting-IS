@@ -4,9 +4,11 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.db.base import Base
 
+
 class UserRole(str, enum.Enum):
     CLIENT = "client"
     ADMIN = "admin"
+
 
 class User(Base):
     __tablename__ = "users"
@@ -14,7 +16,12 @@ class User(Base):
     name = Column(String(100), nullable=False)
     email = Column(String(100), nullable=False, unique=True, index=True)
     password_hash = Column(String(255), nullable=False)
-    role = Column(Enum(UserRole), nullable=False, default=UserRole.CLIENT)
+    role = Column(
+        Enum(UserRole, values_callable=lambda x: [e.value for e in x]),
+        nullable=False,
+        default=UserRole.CLIENT,
+    )
+    avatar_url = Column(String(500))
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
@@ -23,12 +30,14 @@ class User(Base):
     bookings = relationship("Booking", back_populates="user")
     statistics = relationship("Statistic", back_populates="user")
 
+
 class ClientProfile(Base):
     __tablename__ = "client_profiles"
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     phone = Column(String(20))
     license_number = Column(String(50))
     user = relationship("User", back_populates="client_profile")
+
 
 class AdminProfile(Base):
     __tablename__ = "admin_profiles"

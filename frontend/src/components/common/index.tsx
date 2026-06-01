@@ -100,14 +100,8 @@ export function Modal({ open, onClose, title, children, width = 480 }:
 }
 
 // ── Avatar ───────────────────────────────────────────────────────────────────
-export function Avatar({ name, size = 36 }: { name: string; size?: number }) {
-  const initials = name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
-  return (
-    <div style={{ width: size, height: size, borderRadius: '50%', background: C.blue.bg, color: C.blue.text,
-      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.35,
-      fontWeight: 600, flexShrink: 0 }}>{initials}</div>
-  );
-}
+// Re-exported from standalone component that supports avatarUrl
+export { Avatar } from './Avatar';
 
 // ── StatCard ──────────────────────────────────────────────────────────────────
 export function StatCard({ label, value, color = 'blue' }: { label: string; value: string | number; color?: ColorKey }) {

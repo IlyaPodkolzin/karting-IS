@@ -1,28 +1,9 @@
-# Environment files
-.env
-.env.local
-.env.*.local
-*.env
+# OS
+.DS_Store
+Thumbs.db
 
-# Docker
-*.log
-docker-compose.override.yml
-
-# IDE
+# Editor
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
-.DS_Store
-
-# OS
-Thumbs.db
-desktop.ini
-
-# Secrets
-*.pem
-*.key
-*.crt
-*.p12
-.secrets/

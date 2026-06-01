@@ -13,7 +13,7 @@ class Session(Base):
     id = Column(Integer, primary_key=True, index=True)
     kartodrome_id = Column(Integer, ForeignKey("kartodromes.id"), nullable=False, index=True)
     session_number = Column(Integer, nullable=False)
-    session_type = Column(Enum(SessionType), nullable=False, default=SessionType.USUAL)
+    session_type = Column(Enum(SessionType, values_callable=lambda x: [e.value for e in x]), nullable=False, default=SessionType.USUAL)
     date = Column(Date, nullable=False, index=True)
     start_time = Column(Time, nullable=False)
     end_time = Column(Time, nullable=False)

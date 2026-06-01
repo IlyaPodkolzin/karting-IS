@@ -1,17 +1,15 @@
 # Dependencies
 node_modules/
-.pnp/
-.pnp.js
 
-# Build outputs
+# Build output
 dist/
 dist-ssr/
-*.local
 
-# Environment files
+# Local env — never commit
 .env
 .env.local
 .env.*.local
+!.env.example
 
 # Logs
 npm-debug.log*
@@ -19,13 +17,13 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Editor directories
-.vite/
-.cache/
+# Editor
+.vscode/
+.idea/
 
-# Testing
-coverage/
-.nyc_output/
+# OS
+.DS_Store
+Thumbs.db
 
 # TypeScript
 *.tsbuildinfo
