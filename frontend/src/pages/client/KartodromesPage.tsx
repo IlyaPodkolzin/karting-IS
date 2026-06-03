@@ -151,7 +151,7 @@ export function KartodromesPage({ user, onToast }: Props) {
                       </div>
                     )}
                     {user.role === 'admin' && (
-                      <Btn onClick={() => handleUploadClick(k.id, e!)}
+                      <Btn onClick={(e) => handleUploadClick(k.id, e!)}
                         style={{ fontSize: 11, padding: '4px 8px' }}
                         disabled={uploadingId === k.id}>
                         {uploadingId === k.id ? '...' : '📷 Фото'}
