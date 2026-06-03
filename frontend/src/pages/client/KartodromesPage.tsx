@@ -85,8 +85,8 @@ export function KartodromesPage({ user, onToast }: Props) {
     } finally { setBooking(false); }
   }
 
-  function handleUploadClick(kartodromeId: number, e: React.MouseEvent) {
-    e.stopPropagation();
+  function handleUploadClick(kartodromeId: number) {
+    //e.stopPropagation();
     setUploadTarget(kartodromeId);
     fileInputRef.current?.click();
   }
@@ -151,7 +151,8 @@ export function KartodromesPage({ user, onToast }: Props) {
                       </div>
                     )}
                     {user.role === 'admin' && (
-                      <Btn onClick={(e) => handleUploadClick(k.id, e!)}
+                      <Btn
+                        onClick={() => handleUploadClick(k.id)}
                         style={{ fontSize: 11, padding: '4px 8px' }}
                         disabled={uploadingId === k.id}>
                         {uploadingId === k.id ? '...' : '📷 Фото'}
