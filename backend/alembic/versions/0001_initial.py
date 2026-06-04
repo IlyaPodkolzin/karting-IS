@@ -16,11 +16,38 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     # Create ENUM types explicitly with checkfirst
-    op.execute("CREATE TYPE IF NOT EXISTS userrole AS ENUM ('client', 'admin')")
-    op.execute("CREATE TYPE IF NOT EXISTS kartstatus AS ENUM ('available', 'booked', 'maintenance', 'retired')")
-    op.execute("CREATE TYPE IF NOT EXISTS sessiontype AS ENUM ('usual', 'kids')")
-    op.execute("CREATE TYPE IF NOT EXISTS bookingstatus AS ENUM ('pending', 'confirmed', 'cancelled', 'completed')")
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE userrole AS ENUM ('client', 'admin');
+        EXCEPTION
+            WHEN duplicate_object THEN NULL;
+        END $$;
+    """)
     
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE kartstatus AS ENUM ('available', 'booked', 'maintenance', 'retired');
+        EXCEPTION
+            WHEN duplicate_object THEN NULL;
+        END $$;
+    """)
+    
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE sessiontype AS ENUM ('usual', 'kids');
+        EXCEPTION
+            WHEN duplicate_object THEN NULL;
+        END $$;
+    """)
+    
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE bookingstatus AS ENUM ('pending', 'confirmed', 'cancelled', 'completed');
+        EXCEPTION
+            WHEN duplicate_object THEN NULL;
+        END $$;
+    """)
+
     op.create_table(
         'users',
         sa.Column('id', sa.Integer(), primary_key=True, index=True),
