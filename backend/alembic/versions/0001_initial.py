@@ -15,13 +15,19 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
+    # Create ENUM types explicitly with checkfirst
+    op.execute("CREATE TYPE IF NOT EXISTS userrole AS ENUM ('client', 'admin')")
+    op.execute("CREATE TYPE IF NOT EXISTS kartstatus AS ENUM ('available', 'booked', 'maintenance', 'retired')")
+    op.execute("CREATE TYPE IF NOT EXISTS sessiontype AS ENUM ('usual', 'kids')")
+    op.execute("CREATE TYPE IF NOT EXISTS bookingstatus AS ENUM ('pending', 'confirmed', 'cancelled', 'completed')")
+    
     op.create_table(
         'users',
         sa.Column('id', sa.Integer(), primary_key=True, index=True),
         sa.Column('name', sa.String(100), nullable=False),
         sa.Column('email', sa.String(100), nullable=False, unique=True, index=True),
         sa.Column('password_hash', sa.String(255), nullable=False),
-        sa.Column('role', sa.Enum('client', 'admin', name='userrole'), nullable=False, server_default='client'),
+        sa.Column('role', sa.Enum('client', 'admin', name='userrole', create_type=False), nullable=False, server_default='client'),
         sa.Column('created_at', sa.DateTime(), nullable=False, server_default=sa.func.now()),
         sa.Column('updated_at', sa.DateTime(), nullable=False, server_default=sa.func.now()),
     )
@@ -62,7 +68,7 @@ def upgrade() -> None:
         sa.Column('id', sa.Integer(), primary_key=True, index=True),
         sa.Column('number', sa.String(20), nullable=False),
         sa.Column('type', sa.String(50), nullable=False),
-        sa.Column('status', sa.Enum('available', 'booked', 'maintenance', 'retired', name='kartstatus'), nullable=False, server_default='available'),
+        sa.Column('status', sa.Enum('available', 'booked', 'maintenance', 'retired', name='kartstatus', create_type=False), nullable=False, server_default='available'),
         sa.Column('engine_type', sa.String(50)),
         sa.Column('last_maintenance', sa.Date()),
         sa.Column('kartodrome_id', sa.Integer(), sa.ForeignKey('kartodromes.id'), nullable=False, index=True),
@@ -73,7 +79,7 @@ def upgrade() -> None:
         sa.Column('id', sa.Integer(), primary_key=True, index=True),
         sa.Column('kartodrome_id', sa.Integer(), sa.ForeignKey('kartodromes.id'), nullable=False, index=True),
         sa.Column('session_number', sa.Integer(), nullable=False),
-        sa.Column('session_type', sa.Enum('usual', 'kids', name='sessiontype'), nullable=False, server_default='usual'),
+        sa.Column('session_type', sa.Enum('usual', 'kids', name='sessiontype', create_type=False), nullable=False, server_default='usual'),
         sa.Column('date', sa.Date(), nullable=False, index=True),
         sa.Column('start_time', sa.Time(), nullable=False),
         sa.Column('end_time', sa.Time(), nullable=False),
@@ -88,7 +94,7 @@ def upgrade() -> None:
         sa.Column('user_id', sa.Integer(), sa.ForeignKey('users.id'), nullable=False, index=True),
         sa.Column('session_id', sa.Integer(), sa.ForeignKey('sessions.id'), nullable=False, index=True),
         sa.Column('kart_id', sa.Integer(), sa.ForeignKey('karts.id'), nullable=True),
-        sa.Column('status', sa.Enum('pending', 'confirmed', 'cancelled', 'completed', name='bookingstatus'), nullable=False, server_default='confirmed'),
+        sa.Column('status', sa.Enum('pending', 'confirmed', 'cancelled', 'completed', name='bookingstatus', create_type=False), nullable=False, server_default='confirmed'),
         sa.Column('total_price', sa.Float(), nullable=False),
         sa.Column('created_at', sa.DateTime(), nullable=False, server_default=sa.func.now()),
         sa.Column('updated_at', sa.DateTime(), nullable=False, server_default=sa.func.now()),
