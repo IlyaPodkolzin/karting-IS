@@ -63,3 +63,8 @@ def shutdown_scheduler():
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.head("/health")
+def health_head():
+    return True
