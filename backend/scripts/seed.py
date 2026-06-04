@@ -48,28 +48,28 @@ def seed():
 
         # ── Kartodromes ───────────────────────────────────────────────────────
         k1 = Kartodrome(
-            name="Трасса «Красный Октябрь»",
-            address="Москва, ул. Промышленная, 12",
-            latitude=55.751, longitude=37.618,
-            phone="+7 495 123-45-67", email="red@kartbook.ru",
-            description="Профессиональная трасса длиной 650 м с 12 поворотами.",
-            working_hours={"weekdays": "10:00–22:00", "weekends": "09:00–23:00"},
+            name="Karting Center Moscow, м. Юго-Западная",
+            address="пр. Вернадского, д. 78 с. 4, Москва",
+            latitude=55.669986, longitude=37.480409,
+            phone="+7 (495) 123-45-67", email="infoSW@karting-moscow.ru",
+            description="Картодром около метро Юго-Западная",
+            working_hours={"Будни": "13:00–22:00", "Выходные": "10:00–23:00"},
         )
         k2 = Kartodrome(
-            name="«Скорость» Indoor",
-            address="Москва, Ленинградский пр-т, 45",
-            latitude=55.793, longitude=37.530,
-            phone="+7 499 987-65-43", email="speed@kartbook.ru",
-            description="Крытая трасса 400 м. Работаем круглый год.",
-            working_hours={"weekdays": "11:00–23:00", "weekends": "10:00–00:00"},
+            name="Karting Center Moscow, м. Савеловская",
+            address="ул. Сущевский Вал, 5, с. 1А, Москва",
+            latitude=55.794217, longitude=37.592608,
+            phone="+7 (495) 890-00-00", email="infoSV@karting-moscow.ru",
+            description="Картодром около метро Савеловской",
+            working_hours={"Будни": "13:00–23:00", "Выходные": "10:00–00:00"},
         )
         k3 = Kartodrome(
-            name="Картинг-центр «Пит-Стоп»",
-            address="МО, г. Химки, Спортивная, 3",
-            latitude=55.889, longitude=37.412,
-            phone="+7 498 765-43-21", email="pitstop@kartbook.ru",
-            description="Самая длинная трасса Подмосковья — 800 м.",
-            working_hours={"weekdays": "10:00–21:00", "weekends": "09:00–22:00"},
+            name="Karting Center Moscow, м. Рассказовка",
+            address="ул. Бориса Пастернака, 14",
+            latitude=55.637718, longitude=37.315038,
+            phone="+7 (495) 765-43-21", email="infoRS@karting-moscow.ru",
+            description="Картодром около метро Рассказовка",
+            working_hours={"Будни": "10:00–21:00", "Выходные": "09:00–22:00"},
         )
         db.add_all([k1, k2, k3])
         db.flush()
